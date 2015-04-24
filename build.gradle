@@ -1,0 +1,27 @@
+apply plugin: 'java'
+
+version = '1.0.0-SNAPSHOT'
+
+if (!JavaVersion.current().java8Compatible) {
+    throw new IllegalStateException('''A Haiku:
+                                      |  This needs Java 8,
+                                      |  You are using something else,
+                                      |  Refresh. Try again.'''.stripMargin())
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url = 'http://oss.sonatype.org/content/repositories/snapshots/'
+    }
+}
+
+dependencies {
+    compile 'io.vertx:vertx-core:3.0.0-SNAPSHOT'
+    testCompile "junit:junit:4.11"
+    testCompile "io.vertx:vertx-unit:3.0.0-SNAPSHOT"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
