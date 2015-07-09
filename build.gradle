@@ -1,6 +1,6 @@
 apply plugin: 'java'
 
-version = '1.0.0-SNAPSHOT'
+version = '1.0.0'
 
 if (!JavaVersion.current().java8Compatible) {
     throw new IllegalStateException('''A Haiku:
@@ -10,16 +10,17 @@ if (!JavaVersion.current().java8Compatible) {
 }
 
 repositories {
-    mavenCentral()
+    maven { url = 'https://maven.cyngn.com/artifactory/repo' }
     maven {
         url = 'http://oss.sonatype.org/content/repositories/snapshots/'
     }
+    mavenCentral()
 }
 
 dependencies {
-    compile 'io.vertx:vertx-core:3.0.0-SNAPSHOT'
+    compile 'io.vertx:vertx-core:3.0.0'
     testCompile "junit:junit:4.11"
-    testCompile "io.vertx:vertx-unit:3.0.0-SNAPSHOT"
+    testCompile "io.vertx:vertx-unit:3.0.0"
 }
 
 task wrapper(type: Wrapper) {
