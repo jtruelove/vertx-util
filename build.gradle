@@ -19,6 +19,7 @@ repositories {
 
 dependencies {
     compile 'io.vertx:vertx-core:3.0.0'
+    compile 'io.vertx:vertx-web:3.0.0'
     testCompile "junit:junit:4.11"
     testCompile "io.vertx:vertx-unit:3.0.0"
 }
