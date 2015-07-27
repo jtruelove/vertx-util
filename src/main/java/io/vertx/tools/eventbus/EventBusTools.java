@@ -24,7 +24,20 @@ public class EventBusTools {
      * @return the consumer created
      */
     public static <T> MessageConsumer<T> oneShotConsumer(EventBus bus, String address, Handler<Message<T>> handler) {
-       return consumeNTimes(bus, address, handler, 1);
+       return consumeNTimes(bus, address, handler, 1, false);
+    }
+
+    /**
+     * Listen to a message just once
+     *
+     * @param bus the event bus to listen on
+     * @param address the address to listen for
+     * @param handler callback on message received
+     * @param <T>
+     * @return the consumer created
+     */
+    public static <T> MessageConsumer<T> oneShotLocalConsumer(EventBus bus, String address, Handler<Message<T>> handler) {
+        return consumeNTimes(bus, address, handler, 1, true);
     }
 
     /**
@@ -34,13 +47,15 @@ public class EventBusTools {
      * @param address the address to listen for
      * @param handler callback on message(s) received
      * @param timesToConsume the number of times to listen for a message
+     * @param isLocalOnly should you consume just on the local event bus or everywhere
      * @param <T>
      * @return the consumer created
      */
-    public static <T> MessageConsumer<T> consumeNTimes(EventBus bus, String address, Handler<Message<T>> handler, int timesToConsume) {
+    public static <T> MessageConsumer<T> consumeNTimes(EventBus bus, String address, Handler<Message<T>> handler,
+                                                       int timesToConsume, boolean isLocalOnly) {
         if(timesToConsume <= 0) {return null;}
 
-        MessageConsumer<T> consumer = bus.consumer(address);
+        MessageConsumer<T> consumer = isLocalOnly ? bus.localConsumer(address) : bus.consumer(address);
         AtomicInteger count = new AtomicInteger(0);
         consumer.handler(msg -> {
             try {

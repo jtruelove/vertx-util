@@ -45,7 +45,7 @@ public class EventBusToolsTest {
         AtomicInteger counter = new AtomicInteger(0);
         EventBusTools.consumeNTimes(bus, "test_message", event -> {
             counter.incrementAndGet();
-        }, 5);
+        }, 5, false);
 
         Async async = context.async();
         bus.send("test_message", new JsonObject().put("foo", "bar"));
