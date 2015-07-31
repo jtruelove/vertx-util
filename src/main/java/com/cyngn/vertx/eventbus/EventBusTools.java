@@ -1,4 +1,4 @@
-package io.vertx.tools.eventbus;
+package com.cyngn.vertx.eventbus;
 
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.EventBus;
@@ -20,7 +20,7 @@ public class EventBusTools {
      * @param bus the event bus to listen on
      * @param address the address to listen for
      * @param handler callback on message received
-     * @param <T>
+     * @param <T> the type of object getting passed via the event bus
      * @return the consumer created
      */
     public static <T> MessageConsumer<T> oneShotConsumer(EventBus bus, String address, Handler<Message<T>> handler) {
@@ -33,7 +33,7 @@ public class EventBusTools {
      * @param bus the event bus to listen on
      * @param address the address to listen for
      * @param handler callback on message received
-     * @param <T>
+     * @param <T> the type of object getting passed via the event bus
      * @return the consumer created
      */
     public static <T> MessageConsumer<T> oneShotLocalConsumer(EventBus bus, String address, Handler<Message<T>> handler) {
@@ -48,7 +48,7 @@ public class EventBusTools {
      * @param handler callback on message(s) received
      * @param timesToConsume the number of times to listen for a message
      * @param isLocalOnly should you consume just on the local event bus or everywhere
-     * @param <T>
+     * @param <T> the type of object getting passed via the event bus
      * @return the consumer created
      */
     public static <T> MessageConsumer<T> consumeNTimes(EventBus bus, String address, Handler<Message<T>> handler,

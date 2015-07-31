@@ -1,6 +1,10 @@
 apply plugin: 'java'
+// Uncomment below when doing official builds
+//apply from: "gradle/sona.gradle"
 
-version = '1.0.3'
+version = '0.5.0'
+group = "com.cyngn.vertx"
+archivesBaseName = "vertx-util"
 
 if (!JavaVersion.current().java8Compatible) {
     throw new IllegalStateException('''A Haiku:
@@ -10,11 +14,10 @@ if (!JavaVersion.current().java8Compatible) {
 }
 
 repositories {
-    maven { url = 'https://maven.cyngn.com/artifactory/repo' }
+    mavenCentral()
     maven {
         url = 'http://oss.sonatype.org/content/repositories/snapshots/'
     }
-    mavenCentral()
 }
 
 dependencies {
@@ -26,4 +29,26 @@ dependencies {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.0'
+}
+
+task release() << {}
+
+gradle.taskGraph.whenReady {taskGraph ->
+    if (!taskGraph.hasTask(release)) {
+        version += '-SNAPSHOT'
+    }
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
 }
