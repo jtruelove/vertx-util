@@ -18,7 +18,7 @@ Add a dependency to vertx-util:
 
 ## Promises
 
-Light weight promises that run on the vertx event loop. This allows developers to easily coordinate running a number of callbacks in parallel or serially while getting  notifications of results or exceptions. Also there is a JsonObject that is supplied to enable passing of information between callbacks as well as to the exception or done handlers. 
+Light weight promises that run on the vertx event loop. This allows developers to easily coordinate running a number of callbacks in parallel or serially while getting  notifications of results or exceptions. Also there is a JsonObject that is supplied to enable passing of information between callbacks as well as to the exception or done handlers.
 
 ### Basic Example
 
@@ -27,43 +27,43 @@ Light weight promises that run on the vertx event loop. This allows developers t
 Promise.newInstance(vertx)
 .then((context, onResult) -> {
     // do some stuff
-    context.put("result", "some text to share"); 
+    context.put("result", "some text to share");
     onResult.accept(true);
 })
 .then((context, onResult) -> onResult.accept(context.containsKey("result")))
 // optional exception handler, when a promise calls onResult.accept(false) or a callback throws an exception
 .except((context) -> System.out.println("Failure: " + context.encode()))
 // optional completion handler called when all callbacks have run and succeeded
-.done((context) -> System.out.println("Success: " + context.encode())) 
+.done((context) -> System.out.println("Success: " + context.encode()))
 // optionally set a timeout in ms for the callback chain to complete in
 .timeout(3000)
 // you are required to call this once and only once to make the promise chain begin to evaluate
-.eval();   
+.eval();
 ```
-    
+
 ### Callbacks in Parallel
 
 ```java
-// pass it the ref to your current vertx event loop, 
+// pass it the ref to your current vertx event loop,
 Promise.newInstance(vertx)
 // these can complete in a different order than they are added
-.all((context, onResult) -> {       
+.all((context, onResult) -> {
     System.out.println("Also 'all' call 1");
     onResult.accept(true);
 },
-(context, onResult) -> {        
+(context, onResult) -> {
     System.out.println("Also 'all' call 2");
     onResult.accept(true);
 })
-.done((context) -> System.out.println("Success")) 
+.done((context) -> System.out.println("Success"))
 // you are required to call this once and only once to make the promise chain begin to evaluate
-.eval();   
+.eval();
 ```
 
 ### Callbacks Serially then in Parallel
 
-```java    
-// pass it the ref to your current vertx event loop, 
+```java
+// pass it the ref to your current vertx event loop,
 Promise.newInstance(vertx)
 .then((context, onResult) -> {
     System.out.println("Start here");
@@ -73,7 +73,7 @@ Promise.newInstance(vertx)
     System.out.println("Continue here");
     onResult.accept(true);
 })
-.all((context, onResult) -> {       
+.all((context, onResult) -> {
     System.out.println("Starting something else");
     vertx.executeBlocking(future -> {
         try {
@@ -81,18 +81,18 @@ Promise.newInstance(vertx)
         } catch (Exception ex) {}
             future.complete();
         }, asyncResult -> {
-            System.out.println("'all' call 1");                
+            System.out.println("'all' call 1");
             onResult.accept(true);
     });
-    }, (context, onResult) -> {     
+    }, (context, onResult) -> {
         System.out.println("'all' call 2");
         onResult.accept(true);
     })
-.done((context) -> System.out.println("Success")) 
+.done((context) -> System.out.println("Success"))
 // you are required to call this once and only once to make the promise chain begin to evaluate
-.eval();   
+.eval();
 ```
-        
+
 ### Promise Factory
 
 There's a promise factory supplied that allows you to set the vertx instance once and generate Promises on demand without having to keep your vertx reference around.
@@ -100,11 +100,11 @@ There's a promise factory supplied that allows you to set the vertx instance onc
 ```java
 PromiseFactory factory = new PromiseFactory(vertx);
 // Promise 1
-factory.create().then((context, onResult) -> { 
-   System.out.println("a new promise"); 
+factory.create().then((context, onResult) -> {
+   System.out.println("a new promise");
     onResult.accept(true);
-});
-    
+}).eval();
+
 // Promise 2
 factory.createParallel((context, onResult) -> {
     System.out.println("a test");
@@ -112,7 +112,7 @@ factory.createParallel((context, onResult) -> {
 },(context, onResult) -> {
     System.out.println("a test 2");
     onResult.accept(true);
-});
+}).eval();
 ```
 
 ### Things to Remember
@@ -132,11 +132,11 @@ Latch latch = new Latch(2, () -> System.out.println("I'm all done now"));
 vertx.executeBlocking(future -> {
     // something expensive like a DB call
     future.complete();
-}, result -> latch.complete()); 
+}, result -> latch.complete());
 
 vertx.setTimer(2000, (aTimerId) -> latch.complete());
-```      
-      
+```
+
 ## Event Bus Tools
 There are a number of event bus functions including to assist in consuming messages one or `N` times.
 
