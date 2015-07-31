@@ -2,14 +2,19 @@
 
 # vertx-util
 
-General purpose utils for interacting with vert.x
+General purpose utils & apis for interacting with vert.x
 
-## Name
+## Getting Started
 
-the library name is `vertx-util`
+Add a dependency to vertx-util:
 
-## Versions
-
+```xml
+<dependency>
+    <groupId>com.cyngn.vertx</groupId>
+    <artifactId>vertx-util</artifactId>
+    <version>0.5.0</version>
+</dependency>
+```
 
 ## Promises
 
