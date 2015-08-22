@@ -23,24 +23,8 @@ public class HttpHelper {
      * @param code the HTTP code
      */
     public static void processErrorResponse(String error, HttpServerResponse response, int code) {
-        response.putHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-        response.setStatusCode(code);
-        Buffer data = Buffer.buffer(new JsonObject().put("error", error).encode());
-        response.putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(data.length())).write(data).end();
-    }
-
-    /**
-     * Send a JSON error response with the specified error and http code.
-     *
-     * @param error the error that occurred in json form
-     * @param response the response being replied to
-     * @param code the HTTP code
-     */
-    public static void processErrorResponse(JsonObject error, HttpServerResponse response, int code) {
-        response.putHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-        response.setStatusCode(code);
-        Buffer data = Buffer.buffer(error.encode());
-        response.putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(data.length())).write(data).end();
+        processResponse(Buffer.buffer(new JsonObject().put("error", error).encode()), response, code,
+                MediaType.APPLICATION_JSON);
     }
 
     /**
@@ -59,9 +43,7 @@ public class HttpHelper {
      * @param code the HTTP code
      */
     public static void processResponse(HttpServerResponse response, int code) {
-        response.putHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN);
-        response.setStatusCode(code);
-        response.putHeader(HttpHeaders.CONTENT_LENGTH, "0").end();
+        processResponse(Buffer.buffer(""), response, code, MediaType.TEXT_PLAIN);
     }
 
     /**
@@ -103,10 +85,7 @@ public class HttpHelper {
      * @param code the HTTP status code to reply with
      */
     public static void processResponse(JsonObject obj, HttpServerResponse response, int code) {
-        response.putHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-        response.setStatusCode(code);
-        Buffer data = Buffer.buffer(obj.encode());
-        response.putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(data.length())).write(data).end();
+        processResponse(Buffer.buffer(obj.encode()), response, code, MediaType.APPLICATION_JSON);
     }
 
     /**
@@ -118,10 +97,7 @@ public class HttpHelper {
      * @param <T> object type to serialize
      */
     public static <T> void processResponse(T value, HttpServerResponse response, int code) {
-        response.putHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-        response.setStatusCode(code);
-        Buffer data = Buffer.buffer(JsonUtil.getJsonForObject(value));
-        response.putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(data.length())).write(data).end();
+        processResponse(Buffer.buffer(JsonUtil.getJsonForObject(value)), response, code, MediaType.APPLICATION_JSON);
     }
 
     /**
@@ -132,10 +108,20 @@ public class HttpHelper {
      * @param code the HTTP status code to reply with
      */
     public static void processResponse(byte[] byteArray, HttpServerResponse response, int code) {
-        response.putHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM);
+        processResponse(Buffer.buffer(byteArray), response, code, MediaType.APPLICATION_OCTET_STREAM);
+    }
+
+    /**
+     * Send a HTTP response with a byte array as an octet stream.
+     *
+     * @param buffer the data send
+     * @param response the response being replied to
+     * @param code the HTTP status code to reply with
+     */
+    public static void processResponse(Buffer buffer, HttpServerResponse response, int code, String contentType) {
+        response.putHeader(HttpHeaders.CONTENT_TYPE, contentType);
         response.setStatusCode(code);
-        Buffer data = Buffer.buffer(byteArray);
-        response.putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(data.length())).write(data).end();
+        response.putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(buffer.length())).write(buffer).end();
     }
 
     /**
