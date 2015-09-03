@@ -117,6 +117,7 @@ public class HttpHelper {
      * @param buffer the data send
      * @param response the response being replied to
      * @param code the HTTP status code to reply with
+     * @param contentType the CONTENT_TYPE of the response
      */
     public static void processResponse(Buffer buffer, HttpServerResponse response, int code, String contentType) {
         response.putHeader(HttpHeaders.CONTENT_TYPE, contentType);
