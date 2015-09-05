@@ -12,6 +12,17 @@ import org.slf4j.Logger;
  * @author truelove@cyngn.com (Jeremy Truelove) 10/15/14
  */
 public interface RestApi {
+
+    /**
+     * A header that contains a unique request id per request
+     */
+    String X_REQUEST_ID = "x-request-id";
+
+    /**
+     * The actual ip of the client
+     */
+    String X_REAL_IP = "x-real-ip";
+
     /**
      * Handle adding your APIs to the server's router
      *
