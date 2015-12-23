@@ -41,7 +41,7 @@ public class JsonUtilTest {
 
     @Test
     public void testInvalidJsonDeserialize() {
-        Foo f = JsonUtil.parseJsonToObject(null, Foo.class);
+        Foo f = JsonUtil.parseJsonToObject((String) null, Foo.class);
 
         Assert.assertNull(f);
     }
@@ -65,5 +65,18 @@ public class JsonUtilTest {
     @Test(expected=IllegalArgumentException.class)
     public void testBadObjectJsonSerialize() {
         String testStr = JsonUtil.getJsonForObject(null);
+    }
+
+    @Test
+    public void testInvalidJsonDeserializeBytes() {
+        String badJson = "{[}";
+        Foo f = JsonUtil.parseJsonToObject(badJson.getBytes(), Foo.class);
+        Assert.assertNull(f);
+    }
+
+    @Test
+    public void testNullJsonDeserializeBytes() {
+        Foo f = JsonUtil.parseJsonToObject((byte[])null, Foo.class);
+        Assert.assertNull(f);
     }
 }
