@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.TimeZone;
 
 /**
  * Collection of utils for parsing Json and interacting with it.
@@ -17,7 +18,8 @@ public class JsonUtil {
     private final static Logger logger = LoggerFactory.getLogger(JsonUtil.class);
 
     public final static ObjectMapper mapper = new ObjectMapper()
-            .registerModule(new JavaTimeModule());
+            .registerModule(new JavaTimeModule())//handle Java 8 time objects
+            .setTimeZone(TimeZone.getTimeZone("UTC"));//override default of "GMT"
 
     /**
      * Parses raw json into a concrete impl of your choosing

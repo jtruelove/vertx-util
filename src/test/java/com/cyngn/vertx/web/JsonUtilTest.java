@@ -3,11 +3,15 @@ package com.cyngn.vertx.web;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.vertx.core.json.JsonObject;
-import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author truelove@cyngn.com (Jeremy Truelove) 2/4/15
@@ -38,15 +42,15 @@ public class JsonUtilTest {
 
         Foo f = JsonUtil.parseJsonToObject(testStr, Foo.class);
 
-        Assert.assertEquals("testStr", f.bar);
-        Assert.assertEquals(5, f.testField);
+        assertEquals("testStr", f.bar);
+        assertEquals(5, f.testField);
     }
 
     @Test
     public void testInvalidJsonDeserialize() {
         Foo f = JsonUtil.parseJsonToObject((String) null, Foo.class);
 
-        Assert.assertNull(f);
+        assertNull(f);
     }
 
     @Test
@@ -59,10 +63,10 @@ public class JsonUtilTest {
         String testStr = JsonUtil.getJsonForObject(f);
 
         JsonObject jsonObject = new JsonObject(testStr);
-        Assert.assertTrue(jsonObject.getString("bar").equals(f.bar));
-        Assert.assertTrue(!jsonObject.containsKey("dontTouch"));
+        assertTrue(jsonObject.getString("bar").equals(f.bar));
+        assertTrue(!jsonObject.containsKey("dontTouch"));
 
-        Assert.assertEquals(testStr, jsonObject.toString());
+        assertEquals(testStr, jsonObject.toString());
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -74,20 +78,28 @@ public class JsonUtilTest {
     public void testInvalidJsonDeserializeBytes() {
         String badJson = "{[}";
         Foo f = JsonUtil.parseJsonToObject(badJson.getBytes(), Foo.class);
-        Assert.assertNull(f);
+        assertNull(f);
     }
 
     @Test
     public void testNullJsonDeserializeBytes() {
         Foo f = JsonUtil.parseJsonToObject((byte[])null, Foo.class);
-        Assert.assertNull(f);
+        assertNull(f);
     }
 
     @Test
     public void testJavaTimeSerialization(){
-        ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("GMT"));
-        String zdtJson = JsonUtil.getJsonForObject(zdt);
-        ZonedDateTime zdtResurrected = JsonUtil.parseJsonToObject(zdtJson, ZonedDateTime.class);
-        Assert.assertTrue(zdt.compareTo(zdtResurrected) == 0);
+        LocalDateTime then = LocalDateTime.now();
+
+        ZonedDateTime utcZdt = ZonedDateTime.of(then, ZoneId.of("UTC"));
+        String utcZdtJson = JsonUtil.getJsonForObject(utcZdt);
+        ZonedDateTime utcZdtResurrected = JsonUtil.parseJsonToObject(utcZdtJson, ZonedDateTime.class);
+        assertTrue(utcZdt.compareTo(utcZdtResurrected) == 0);
+
+        ZonedDateTime gmtZdt = ZonedDateTime.of(then, ZoneId.of("GMT"));
+        String gmtZdtJson = JsonUtil.getJsonForObject(gmtZdt);
+        ZonedDateTime gmtZdtResurrected = JsonUtil.parseJsonToObject(gmtZdtJson, ZonedDateTime.class);
+        assertTrue(gmtZdt.compareTo(gmtZdtResurrected) != 0);//our default is UTC, and UTC != GMT
+        assertTrue(utcZdtResurrected.compareTo(gmtZdtResurrected) == 0);//however, both resurrected values match
     }
 }
