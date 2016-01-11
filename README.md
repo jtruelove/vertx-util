@@ -12,7 +12,7 @@ Add a dependency to vertx-util:
 <dependency>
     <groupId>com.cyngn.vertx</groupId>
     <artifactId>vertx-util</artifactId>
-    <version>0.5.7</version>
+    <version>0.5.10</version>
 </dependency>
 ```
 
