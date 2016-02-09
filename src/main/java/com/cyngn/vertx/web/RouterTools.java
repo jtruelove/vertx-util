@@ -20,7 +20,7 @@ public class RouterTools {
      * @return the added no match Route
      */
     public static Route noMatch(Router router, Handler<RoutingContext> noMatchHandler) {
-        return router.route().last(true).handler(noMatchHandler);
+        return router.route().last().handler(noMatchHandler);
     }
 
     /**
@@ -29,6 +29,7 @@ public class RouterTools {
      * @param router the router to add handlers too
      * @param handlers the handlers to add
      */
+    @SafeVarargs
     public static void registerRootHandlers(Router router, Handler<RoutingContext> ... handlers) {
         for (Handler<RoutingContext> handler : handlers) {
             router.route().handler(handler);
