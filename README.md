@@ -10,7 +10,7 @@ Add a dependency to vertx-util:
 
 ```xml
 <dependency>
-    <groupId>com.cyngn.vertx</groupId>
+    <groupId>com.jtruelove.vertx</groupId>
     <artifactId>vertx-util</artifactId>
     <version>0.7.0</version>
 </dependency>
